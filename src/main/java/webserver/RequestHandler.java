@@ -6,17 +6,21 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.net.URLDecoder;
 import java.nio.file.Files;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import util.RequestHeaderUtils;
+import model.User;
+import util.RequestHandlerUtils;
 
 public class RequestHandler extends Thread {
     private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
 
     private Socket connection;
+    
+    private static final String CREATE_USER = "/user/create";
 
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
@@ -27,23 +31,50 @@ public class RequestHandler extends Thread {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
+        	String header = RequestHandlerUtils.parseHeader(in);
+    		String url = RequestHandlerUtils.getURLfromHeader(header);
+    		url = URLDecoder.decode(url, "UTF-8");
+    		log.debug("Request url : " + url);
+    		
+    		if(isCreateUser(url)){
+    			createUser(RequestHandlerUtils.getParams(url));
+    			return;
+    		}
+    		responseData(url, out); // 유저 생성요청이 아니면 쿼리를 클라이언트가 요청한 자원 경로로 인식하여 요청 처리
 
-        	String header = RequestHeaderUtils.parseHeader(in);
-        	String url = RequestHeaderUtils.getURLfromHeader(header);
-        	System.out.println("request url : " + url);
-        	byte[] body = Files.readAllBytes(new File("./webapp" + url).toPath());
-        	DataOutputStream dos = new DataOutputStream(out);
-        	response200Header(dos, body.length);
-        	responseBody(dos, body);
-        	
-//            DataOutputStream dos = new DataOutputStream(out);
-//            byte[] body = "Hello World".getBytes();
-//            response200Header(dos, body.length);
-//            responseBody(dos, body);
         } catch (IOException e) {
             log.error(e.getMessage());
+        } catch (Exception e){
+        	log.error(e.getMessage());
         }
     }
+
+	private void createUser(String params) throws Exception {
+		if(params == null || params.isEmpty()){
+			log.debug("params are not sent");
+			return;
+		}
+		
+		// 웹브라우져에서 URL을 조작하여 User 데이터 저장과 상관없는 (K,V) pair를 전달할 수도 있다. 
+		// 이 경우 현재는 map에 (K,V) 형태로 저장이 되며, createUser 메소드를 수행하는데 큰 영향을 주지는 않는다. 
+		// 단, User model 클래스의 key 중 빠드린 것이 있어도 User 객체가 만들어지는데 해당 필드값은 null 로 설정된다.
+		// User data field 중 null로 되는 것이 없게 하려면 별도의 조치를 취해주어야 한다. 
+		
+		User user = RequestHandlerUtils.createUser(params);
+		log.debug("user : " + user);
+	}
+
+	private boolean isCreateUser(String url) {
+		return CREATE_USER.equals(RequestHandlerUtils.getQuery(url));
+	}
+
+	private void responseData(String url, OutputStream out) throws IOException {
+		byte[] body = Files.readAllBytes(new File("./webapp" + url).toPath());
+		DataOutputStream dos = new DataOutputStream(out);
+		
+		response200Header(dos, body.length);
+		responseBody(dos, body);
+	}
 
     private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
         try {
