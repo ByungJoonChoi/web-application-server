@@ -102,7 +102,8 @@ public class RequestHeaderUtilsTest {
 	
 	@Test
 	public void createUserTest() throws Exception {
-		User user = RequestHandlerUtils.createUser(url);
+		String params = RequestHandlerUtils.getParams(url);
+		User user = RequestHandlerUtils.createUser(params);
 		assertEquals("cbj0618", user.getUserId());
 		assertEquals("123456", user.getPassword());
 		assertEquals("%EC%B5%9C%EB%B3%91%EC%A4%80", user.getName());
