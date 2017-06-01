@@ -27,7 +27,7 @@
 * url 이 ( A )?( B ) 형태로 들어왔을 때, A 부분을 query 라고 지칭하였고, B 부분을 param 이라고 지칭하였다.
 * 한글을 입력했을 때, 서버로 전송된 한글 데이터가 깨지는 현상이 있다. 왜 이런 현상이 일어나는지 솔직히 정확하게 이해가 가지는 않는다. 단지, 인코딩 방식(UTF-8, EUC-KR 등)이 여러가지가 있는데 그게 html 파일, response header 등에 다르게 적용이 될 수가 있어서 이를 통일해야 한다고 이해했다. 그리고, 서버로 전송된 깨진 한글 데이터에 대해서는 URLDecoder로 디코딩을 하니 한글이 제대로 나오는 것을 확인할 수 있었다.
 * URL을 인코딩해야 하는 2가지 이유 : 1) URL 은 ASCII char-set으로만 구성되어야 하는데 한글은 여기 해당이 안되기 때문 2) URL 내에서 의미를 갖는 문자(%,?,# 등)를 그대로 사용하면 문제가 생길 수 있기 때문(이걸로 공격도 할 수 있다는데....)
-참고자료 : http://deploy.co.kr/blog/241, http://regularmotion.kr/url-encoding-url/, http://nomore7.tistory.com/entry/JAVA-Encoding-%EA%B3%BC-Decoding%EC%97%90-%EB%8C%80%ED%95%9C-%EC%A0%95%EB%A6%AC
+참고자료 : http://deploy.co.kr/blog/241, http://regularmotion.kr/url-encoding-url/, http://nomore7.tistory.com/entry/JAVA-Encoding-%EA%B3%BC-Decoding%EC%97%90-%EB%8C%80%ED%95%9C-%EC%A0%95%EB%A6%AC, http://hamait.tistory.com/355
 * \r\n : \r 은 행의 맨 왼쪽으로 이동하기, \n 은 아래로 이동하기. 아무튼 둘이 합쳐서 쓰면 개행인듯??
 참고자료 : https://kldp.org/node/28535
 * (의문점) HttpRequestUtils 에 parseValues 메소드를 보면 params 를 파싱하여 map(K,V)을 생성하여 리턴하는데 stream을 사용하는 것을 볼 수 있다. 이렇게 stream을 사용해서 코드를 작성하면 좋은점은 무엇일까??
