@@ -4,8 +4,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URLDecoder;
 import java.util.HashMap;
 
+import model.Request;
 import model.User;
 
 public class RequestHandlerUtils {
@@ -22,15 +24,27 @@ public class RequestHandlerUtils {
 		return getUrlFromFirstLine(getFirstLine(header));
 	}
 	
-	public static String parseHeader(InputStream in) throws IOException{
+	public static Request parseRequest(InputStream in) throws IOException{
+		Request req = new Request();
     	BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
     	StringBuffer sb = new StringBuffer();
     	String line = "";
+    	int content_length = 0;
     	while(!"".equals(line = br.readLine())){
     		sb.append(line);
     		sb.append("\n");
+    		if(line.startsWith("Content-Length"))
+    		{
+    			content_length = Integer.parseInt(line.split(": ")[1]);
+    		}
     	}
-    	return sb.toString();
+    	req.setHeader(URLDecoder.decode(sb.toString(), "UTF-8"));
+    	
+    	if(content_length > 0){
+    		String body = IOUtils.readData(br, content_length);
+    		req.setBody(URLDecoder.decode(body, "UTF-8"));
+    	}
+    	return req;
     }
 
 	public static String getParams(String url) {
@@ -65,5 +79,12 @@ public class RequestHandlerUtils {
 
 	public static User createUser(String params) throws Exception {
 		return saveUserFromMap(getMapFromParams(params));
+	}
+
+	/*
+	 * POST 또는 GET 을 리턴 
+	 */
+	public static String getMethod(String header) {
+		return getFirstLine(header).split(" ")[0];
 	}
 }

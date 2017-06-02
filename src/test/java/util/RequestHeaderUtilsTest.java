@@ -60,23 +60,16 @@ public class RequestHeaderUtilsTest {
 		assertTrue("/index.html".equals(RequestHandlerUtils.getURLfromHeader(header)));
 	}
 	
-//	@Test
-//	public void isFormReqTest() throws Exception {
-//		String url2 = "/index.html";
-//		assertTrue(RequestHandlerUtils.isFormReq(url));
-//		assertTrue(!RequestHandlerUtils.isFormReq(url2));
-//	}
-	
 	@Test
-	public void getQueryDataTest() throws Exception {
+	public void getParamsTest() throws Exception {
 		assertTrue("userId=cbj0618&password=123456&name=%EC%B5%9C%EB%B3%91%EC%A4%80&email=cbj0618%40gmail.com"
 				.equals(RequestHandlerUtils.getParams(url)));
 	}
 	
 	@Test
 	public void getUserKVmapTest() throws Exception {
-		String queryData = RequestHandlerUtils.getParams(url);
-		HashMap<String, String> map = RequestHandlerUtils.getMapFromParams(queryData);
+		String params = RequestHandlerUtils.getParams(url);
+		HashMap<String, String> map = RequestHandlerUtils.getMapFromParams(params);
 		assertEquals("cbj0618", map.get("userId"));
 		assertEquals("123456", map.get("password"));
 		assertEquals("%EC%B5%9C%EB%B3%91%EC%A4%80", map.get("name"));
@@ -108,6 +101,14 @@ public class RequestHeaderUtilsTest {
 		assertEquals("123456", user.getPassword());
 		assertEquals("%EC%B5%9C%EB%B3%91%EC%A4%80", user.getName());
 		assertEquals("cbj0618%40gmail.com", user.getEmail());
+	}
+	
+	@Test
+	public void getMethodTest() throws Exception {
+		assertEquals("GET",RequestHandlerUtils.getMethod(header));
+		
+		String line = "POST /index.html HTTP/1.1";
+		assertEquals("POST",RequestHandlerUtils.getMethod(line));
 	}
 	
 	@After
