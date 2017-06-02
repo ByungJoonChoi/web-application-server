@@ -36,7 +36,20 @@
 * 원격서버에서 메이븐으로 빌드하니 실패하였다. 로컬에서 실행은 되는데 왜 빌드가 실패하나 살펴봤더니 JunitTest가 실패했었다. 해당부분을 true가 나오도록 수정하고 다시 빌드하니 성공했다. 작성한 메서드의 기능을 변경하면, 반드시 해당 메서드를 테스트했던 테스트케이스도 수정하거나 살펴보자.
 
 ### 요구사항 3 - post 방식으로 회원가입
-*
+* 웹에서 서버로 HTTP request 를 보낼 때 POST 방식으로 데이터를 보내면 HEADER 내에 Content-Length로 몇 바이트의 BODY 를 보냈는지 알려준다.
+* BODY가 저장된 위치는 HEADER가 끝나고 한줄 띈 아래이다.
+
+예)
+POST /user/create HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+Content-Length: 59
+Content-Type: application/x-www-form-urlencoded
+Accept: */*
+
+userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net
+
+* 서버로 response 할 때도 이와 비슷한 형태로 header(Content-Length가 표함됨)와 body 를 보내는 것을 확인할 수 있다.
 
 ### 요구사항 4 - redirect 방식으로 이동
 *
