@@ -23,7 +23,9 @@ public class RequestHandler extends Thread {
     private static final String CREATE_USER = "/user/create";
     private static final String GET = "GET";
     private static final String POST = "POST";
-
+//    private static final String LOCAL_HOME = "http://localhost:8080/index.html";
+    private static final String SERVER_HOME = "http://13.124.139.176:8080/index.html"; 
+    
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
     }
@@ -39,6 +41,8 @@ public class RequestHandler extends Thread {
     		
     		if(isCreateUser(url)){
     			createUser(url, req);
+    			redirect(out, SERVER_HOME);
+//    			redirect(out, LOCAL_HOME);
     			return;
     		}
     		
@@ -51,7 +55,18 @@ public class RequestHandler extends Thread {
         }
     }
     
-    private void createUser(String url, Request req) throws Exception{
+    private void redirect(OutputStream out, String url) {
+		DataOutputStream dos = new DataOutputStream(out);
+		try {
+            dos.writeBytes("HTTP/1.1 302 Found \r\n");
+            dos.writeBytes("Location: " + url + " \r\n");
+            dos.flush();
+		} catch (IOException e) {
+            log.error(e.getMessage());
+        }
+	}
+
+	private void createUser(String url, Request req) throws Exception{
     	String method = RequestHandlerUtils.getMethod(req.getHeader());
     	String params = null;
     	if(GET.equals(method)){
