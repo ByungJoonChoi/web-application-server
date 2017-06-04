@@ -37,22 +37,33 @@
 
 ### 요구사항 3 - post 방식으로 회원가입
 * 웹에서 서버로 HTTP request 를 보낼 때 POST 방식으로 데이터를 보내면 HEADER 내에 Content-Length로 몇 바이트의 BODY 를 보냈는지 알려준다.
-* BODY가 저장된 위치는 HEADER가 끝나고 한줄 띈 아래이다.
-
-예)
-POST /user/create HTTP/1.1
-Host: localhost:8080
-Connection: keep-alive
-Content-Length: 59
-Content-Type: application/x-www-form-urlencoded
-Accept: */*
-
-userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net
+* BODY가 저장된 위치는 HEADER가 끝나고 한줄 띈 아래이다.<br>
+예)<br>
+POST /user/create HTTP/1.1<br>
+Host: localhost:8080<br>
+Connection: keep-alive<br>
+Content-Length: 59<br>
+Content-Type: application/x-www-form-urlencoded<br>
+Accept: \*/\*<br><br>
+userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net<br>
 
 * 서버로 response 할 때도 이와 비슷한 형태로 header(Content-Length가 표함됨)와 body 를 보내는 것을 확인할 수 있다.
 
 ### 요구사항 4 - redirect 방식으로 이동
-*
+* HTTP response code를 redirect를 의미하는 code로 변경해주면 간단하게 클라이언트를 redirect시킬 수 있다.
+* 기존에 response header에 "200 OK"라고 되어 있던 부분을 "302 Found"로 바꾸면 redirect시키겠다는 의미이다.<br><br>
+예)<br>
+HTTP/1.1 302 Found<br>
+Location: http://www.naver.com<br>
+* response 코드에는 여러종류가 있으며 대략적으로 아래와 같은 의미이다.<br>
+2XX : 성공<br>
+3XX : redirect <br>
+4XX : 클라이언트 에러 <br>
+5XX : 서버 에러 <br>
+
+* response code 참고자료 <br>
+https://en.wikipedia.org/wiki/List_of_HTTP_status_codes <br> 
+https://en.wikipedia.org/wiki/HTTP_302 <br>
 
 ### 요구사항 5 - cookie
 *
