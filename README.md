@@ -66,7 +66,7 @@ https://en.wikipedia.org/wiki/List_of_HTTP_status_codes <br>
 https://en.wikipedia.org/wiki/HTTP_302 <br>
 
 ### 요구사항 5 - cookie
-*
+* [로그인 성공 정책]<br>User validation check 를 위해서 User class의 equals 메소드를 오버라이드 하려했다.<br>그런데 로그인할 때 필요한 정보는 id, pw 뿐인데 혹여 나중에 "id, pw 이외의 정보까지 모두 일치하는 경우에만 두 User 객체가 같다고 하자"는 정책이 추가될 상황이 올지도 모른다는 생각이 들어서 equals 메소드 오버라이딩을 하지 않기로 했다. <br>우선, id, pw 만 확인해서 같으면 로그인 성공시키기로 했다.
 
 ### 요구사항 6 - stylesheet 적용
 *
