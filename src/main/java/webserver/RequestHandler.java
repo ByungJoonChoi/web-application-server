@@ -7,7 +7,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.nio.file.Files;
-import java.util.HashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,9 +26,9 @@ public class RequestHandler extends Thread {
     private static final String GET = "GET";
     private static final String POST = "POST";
     private static final String LOCAL_HOME = "http://localhost:8080/index.html";
-    private static final String LOGIN_FAIL = "http://localhost:8080/user/login_failed.html";
 //    private static final String SERVER_HOME = "http://13.124.139.176:8080/index.html"; 
-    
+    private static final String LOGIN_FAIL = "http://localhost:8080/user/login_failed.html";
+   
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
     }
@@ -42,7 +41,7 @@ public class RequestHandler extends Thread {
         	Request req = RequestHandlerUtils.parseRequest(in);
     		String url = RequestHandlerUtils.getURLfromHeader(req.getHeader());
     		log.debug("Request url : " + url);
-    		
+    		log.debug("header : " + req.getHeader());
     		if(isCreateUser(url)){
     			DataBase.addUser(createUser(url, req));
 //    			redirect(out, SERVER_HOME);
@@ -54,9 +53,10 @@ public class RequestHandler extends Thread {
     			log.debug("LogingUser!!!");
     			log.debug("body : " + req.getBody());
     			if(isValidUser(req.getBody())){
-    				redirect(out, LOCAL_HOME);
+    				redirect(out, LOCAL_HOME, true);
+    				return;
     			}
-    			redirect(out, LOGIN_FAIL);
+    			redirect(out, LOGIN_FAIL, false);
     			return;
     		}
     		responseData(url, out); // 유저 생성요청이 아니면 url을 클라이언트가 요청한 자원 경로로 인식하여 요청 처리
@@ -81,6 +81,18 @@ public class RequestHandler extends Thread {
 		} catch (IOException e) {
             log.error(e.getMessage());
         }
+	}
+	
+	private void redirect(OutputStream out, String url, boolean isLogin) {
+		DataOutputStream dos = new DataOutputStream(out);
+		try {
+			dos.writeBytes("HTTP/1.1 302 Found \r\n");
+			dos.writeBytes("Set-Cookie: logined=" + isLogin + "\r\n");
+			dos.writeBytes("Location: " + url + " \r\n");
+			dos.flush();
+		} catch (IOException e) {
+			log.error(e.getMessage());
+		}
 	}
 
 	private User createUser(String url, Request req) throws Exception{
