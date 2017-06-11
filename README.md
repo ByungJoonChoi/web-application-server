@@ -72,7 +72,10 @@ https://en.wikipedia.org/wiki/HTTP_302 <br>
 
 * [쿠키설정 범위]<br>요구사항 5 구현과정에서 로그인 할 때 사용했던 url 뒷부분이 /user/login 이다.<br>이때 생성된 쿠키는 /user 이하 범위인것 같다. 로그인 성공시 index.html로 돌아오는데 이때는 쿠키값이 없기 때문에 그렇게 추측해보았다.
 
-### 요구사항 6 - stylesheet 적용
+### 요구사항 6 - 사용자 목록 출력
+* 헤더에 있는 쿠키로부터 로그인 여부를 판단할 수 있다.<br>로그인된 경우 html문서를 String으로 동적으로 생성한 뒤, 바이트 단위로 읽어서 response body를 만들어 브라우져에 응답한다. 
+
+### 요구사항 7 - stylesheet 적용
 *
 
 ### heroku 서버에 배포 후
