@@ -125,6 +125,38 @@ public class RequestHeaderUtilsTest {
 		assertTrue(!RequestHandlerUtils.isValidUser(params));
 	}
 	
+	@Test
+	public void isLoggedInTest() throws Exception {
+		assertTrue(!RequestHandlerUtils.isLoggedIn(header));
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append("GET /index.html HTTP/1.1");
+		sb.append("\n");
+		sb.append("Host: localhost:8080");
+		sb.append("\n");
+		sb.append("Connection: keep-alive");
+		sb.append("\n");
+		sb.append("Pragma: no-cache");
+		sb.append("\n");
+		sb.append("Cache-Control: no-cache");
+		sb.append("\n");
+		sb.append("Cookie: logined=true");
+		sb.append("\n");
+		sb.append("User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36");
+		sb.append("\n");
+		sb.append("Accept: image/webp,image/*,*/*;q=0.8");
+		sb.append("\n");
+		sb.append("Referer: http://localhost:8080/index.html");
+		sb.append("\n");
+		sb.append("Accept-Encoding: gzip, deflate, sdch, br");
+		sb.append("\n");
+		sb.append("Accept-Language: ko-KR,ko;q=0.8,en-US;q=0.6,en;q=0.4");
+		sb.append("\n");
+		String header2 = sb.toString();
+		assertTrue(RequestHandlerUtils.isLoggedIn(header2));
+		
+	}
+	
 	@After
 	public void teardown(){
 		header = null;

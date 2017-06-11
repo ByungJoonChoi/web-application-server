@@ -100,4 +100,14 @@ public class RequestHandlerUtils {
 			return false;
 		return id.equals(user.getUserId()) && pw.equals(user.getPassword());
 	}
+
+	public static boolean isLoggedIn(String header) {
+		String[] token = header.split("\n");
+		for(String str : token){
+			if(str.contains("Cookie"))
+				return Boolean.parseBoolean(str.split("=")[1]);
+				
+		}
+		return false;
+	}
 }
