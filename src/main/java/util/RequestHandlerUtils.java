@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.net.URLDecoder;
 import java.util.HashMap;
 
+import db.DataBase;
 import model.Request;
 import model.User;
 
@@ -86,5 +87,17 @@ public class RequestHandlerUtils {
 	 */
 	public static String getMethod(String header) {
 		return getFirstLine(header).split(" ")[0];
+	}
+
+	public static boolean isValidUser(String params) throws Exception {
+		HashMap<String, String> map = getMapFromParams(params);
+		String id = map.get("userId");
+		String pw = map.get("password");
+		if(id == null || pw == null)
+			return false;
+		User user = DataBase.findUserById(id);
+		if(user == null)
+			return false;
+		return id.equals(user.getUserId()) && pw.equals(user.getPassword());
 	}
 }

@@ -8,6 +8,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import db.DataBase;
 import model.User;
 
 public class RequestHeaderUtilsTest {
@@ -109,6 +110,19 @@ public class RequestHeaderUtilsTest {
 		
 		String line = "POST /index.html HTTP/1.1";
 		assertEquals("POST",RequestHandlerUtils.getMethod(line));
+	}
+	
+	@Test
+	public void isValidUserTest() throws Exception {
+		DataBase.addUser(new User("peter0618", "1111", "peter", "peter0618@naver.com"));
+		String params = "userId=peter0618&password=1111";
+		assertTrue(RequestHandlerUtils.isValidUser(params));
+		
+		params = "userId=peter0618&password=1112"; // invalid PW
+		assertTrue(!RequestHandlerUtils.isValidUser(params));
+		
+		params = "userId=cbj0618&password=1111"; //invalid ID
+		assertTrue(!RequestHandlerUtils.isValidUser(params));
 	}
 	
 	@After

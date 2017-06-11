@@ -28,6 +28,20 @@ public class User {
     public String getEmail() {
         return email;
     }
+    
+//    @Override
+//    public boolean equals(Object obj) {
+//    	if(this == obj)
+//    		return true;
+//    	if(obj == null)
+//    		return false;
+//    	if(getClass() != obj.getClass())
+//    		return false;
+//    	User user = (User) obj;
+//    	if(this.userId == null || this.password == null)
+//    		return false;
+//    	return this.userId.equals(user.userId) && this.password.equals(user.password);
+//    }
 
     @Override
     public String toString() {
