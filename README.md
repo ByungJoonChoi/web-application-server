@@ -76,7 +76,10 @@ https://en.wikipedia.org/wiki/HTTP_302 <br>
 * 헤더에 있는 쿠키로부터 로그인 여부를 판단할 수 있다.<br>로그인된 경우 html문서를 String으로 동적으로 생성한 뒤, 바이트 단위로 읽어서 response body를 만들어 브라우져에 응답한다. 
 
 ### 요구사항 7 - stylesheet 적용
-*
+* 기존 코드에는 브라우져에게 응답을 할 때 response header의 Content-Type 이 무조건 text/html 이었다.
+<br>그렇게 설정해 놓으면 css 파일 요청이 왔을 때도 브라우저는 서버로부터 받은 css 파일을 html 문서로 인식해버린다.
+* 이 문제를 해결하기 위해서는 <br>1) request header 로부터 css 파일을 요청했는지 여부를 알아낸뒤, <br>2) css 파일 요청이면 response header의 Content-Type을 text/css 로 설정하여 보내면 된다.
+* css 파일을 요청했는지 여부는 request header의 Accept: 이하 부분을 보면 확인할 수 있다.
 
 ### heroku 서버에 배포 후
 *
