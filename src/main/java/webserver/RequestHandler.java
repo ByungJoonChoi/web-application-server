@@ -27,10 +27,12 @@ public class RequestHandler extends Thread {
     private static final String USER_LIST ="/user/list";
     private static final String GET = "GET";
     private static final String POST = "POST";
-//    private static final String LOCAL_HOME = "http://localhost:8080/index.html";
-    private static final String SERVER_HOME = "http://13.124.139.176:8080/index.html"; 
-    private static final String LOGIN_FAIL = "http://localhost:8080/user/login_failed.html";
-    private static final String LOGIN = "http://localhost:8080/user/login.html";
+//    private static final String SERVER_IP = "13.124.139.176";
+    private static final String SERVER_IP = "localhost";
+    private static final String HOME = "http://" + SERVER_IP + ":8080/index.html";
+//    private static final String SERVER_HOME = "http://13.124.139.176:8080/index.html"; 
+    private static final String LOGIN_FAIL = "http://" + SERVER_IP + ":8080/user/login_failed.html";
+    private static final String LOGIN = "http://" + SERVER_IP + ":8080/user/login.html";
     
     private String contentType = "text/html";
    
@@ -49,7 +51,7 @@ public class RequestHandler extends Thread {
     		log.debug("header : " + req.getHeader());
     		if(isCreateUser(url)){
     			DataBase.addUser(createUser(url, req));
-    			redirect(out, SERVER_HOME);
+    			redirect(out, HOME);
 //    			redirect(out, LOCAL_HOME);
     			return;
     		}
@@ -59,7 +61,7 @@ public class RequestHandler extends Thread {
     			log.debug("body : " + req.getBody());
     			if(isValidUser(req.getBody())){
 //    				redirect(out, LOCAL_HOME, true);
-    				redirect(out, SERVER_HOME, true);
+    				redirect(out, HOME, true);
     				return;
     			}
     			redirect(out, LOGIN_FAIL, false);
