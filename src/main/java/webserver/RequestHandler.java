@@ -77,11 +77,10 @@ public class RequestHandler extends Thread {
     			redirect(out, LOGIN);
     			return;
     		}
-    		if(isRequestStylesheet(url)){
-    			// response Header ContentsType 을 text/css 로 주어야 함.
+    		
+    		if(isReqStylesheet(req.getHeader())){
     			contentType = "text/css";
     		}
-    		
     		responseData(url, out); // 유저 생성요청이 아니면 url을 클라이언트가 요청한 자원 경로로 인식하여 요청 처리
     		
         } catch (IOException e) {
@@ -91,8 +90,8 @@ public class RequestHandler extends Thread {
         }
     }
 
-	private boolean isRequestStylesheet(String url) {
-		return url.endsWith("css");
+	private boolean isReqStylesheet(String header) {
+		return RequestHandlerUtils.isReqStylesheet(header);
 	}
 
 	private boolean isValidUser(String params) throws Exception {

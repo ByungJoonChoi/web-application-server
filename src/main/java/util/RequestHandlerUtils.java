@@ -110,4 +110,14 @@ public class RequestHandlerUtils {
 		}
 		return false;
 	}
+
+	public static boolean isReqStylesheet(String header) {
+		String[] token = header.split("\n");
+		for(String str : token){
+			if(str.contains("Accept:")){
+				return str.split(":")[1].contains("text/css");
+			}
+		}
+		return false;
+	}
 }
