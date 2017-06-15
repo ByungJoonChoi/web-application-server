@@ -31,6 +31,8 @@ public class RequestHandler extends Thread {
 //    private static final String SERVER_HOME = "http://13.124.139.176:8080/index.html"; 
     private static final String LOGIN_FAIL = "http://localhost:8080/user/login_failed.html";
     private static final String LOGIN = "http://localhost:8080/user/login.html";
+    
+    private String contentType = "text/html";
    
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
@@ -75,6 +77,11 @@ public class RequestHandler extends Thread {
     			redirect(out, LOGIN);
     			return;
     		}
+    		if(isRequestStylesheet(url)){
+    			// response Header ContentsType 을 text/css 로 주어야 함.
+    			contentType = "text/css";
+    		}
+    		
     		responseData(url, out); // 유저 생성요청이 아니면 url을 클라이언트가 요청한 자원 경로로 인식하여 요청 처리
     		
         } catch (IOException e) {
@@ -83,6 +90,10 @@ public class RequestHandler extends Thread {
         	log.error(e.getMessage());
         }
     }
+
+	private boolean isRequestStylesheet(String url) {
+		return url.endsWith("css");
+	}
 
 	private boolean isValidUser(String params) throws Exception {
 		return RequestHandlerUtils.isValidUser(params);
@@ -159,7 +170,8 @@ public class RequestHandler extends Thread {
     private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
         try {
             dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
+//            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
+            dos.writeBytes("Content-Type: " + contentType + ";charset=utf-8\r\n");
             dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {
